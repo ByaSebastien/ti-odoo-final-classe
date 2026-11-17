@@ -1,6 +1,7 @@
 """Hero : un héros a toujours un job, qui fixe ses PV, ses PM, sa VIT et sa compétence."""
 
 from abc import abstractmethod
+from typing import override
 
 from final_classe.characters.base import Character
 
@@ -25,6 +26,7 @@ class Hero(Character):
         self.potions = 3
         self.level = 1
         self.xp = 0
+        self.guarding = False  # en garde : les coups reçus sont divisés par deux
 
     @property
     def name(self) -> str:
@@ -63,6 +65,21 @@ class Hero(Character):
     @abstractmethod
     def skill_effect(self, target: Character) -> int:
         """L'effet de la compétence sur une cible : chaque job écrit le sien."""
+
+    def start_turn(self) -> None:
+        """Le début du tour du héros : il quitte sa garde."""
+        self.guarding = False
+
+    def defend(self) -> None:
+        """Se met en garde jusqu'à son prochain tour."""
+        self.guarding = True
+
+    @override
+    def take_damage(self, amount: int) -> int:
+        """En garde, le héros n'encaisse que la moitié du coup."""
+        if self.guarding:
+            amount //= 2
+        return super().take_damage(amount)
 
     def drink_potion(self) -> int:
         """Boit une potion ; renvoie les PV rendus, ou 0 s'il n'en reste plus."""

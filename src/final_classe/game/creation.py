@@ -1,11 +1,22 @@
 """La création du héros : son nom, son job, et la répartition de ses points."""
 
-from final_classe.characters import BlackMage, Hero, Soldier
+from final_classe.characters import (
+    Archer,
+    BlackMage,
+    Hero,
+    Knight,
+    Monk,
+    Ninja,
+    Samurai,
+    Soldier,
+    Thief,
+)
 from final_classe.game.display import console
 
 POINTS = 20  # les points à répartir
 BASE_STAT = 10  # la valeur de départ de chaque statistique
-JOBS: list[type[Hero]] = [Soldier, BlackMage]  # des classes, rangées dans une liste
+# Des classes, rangées dans une liste. Les trois dernières : bonus ★★ 3 et ★★ 4.
+JOBS: list[type[Hero]] = [Soldier, BlackMage, Knight, Monk, Thief, Samurai, Archer, Ninja]
 
 
 def ask_int(prompt: str, low: int, high: int) -> int:

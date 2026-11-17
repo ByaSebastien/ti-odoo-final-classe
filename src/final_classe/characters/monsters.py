@@ -22,17 +22,18 @@ class Monster(Character):
     XP = 0
     GIL = 0
 
-    def __init__(self, name: str | None = None) -> None:
-        super().__init__(
-            name or self.NAME,
-            self.HP,
-            self.MP,
-            self.STRENGTH,
-            self.MAGIC,
-            self.DEFENSE,
-            self.RESISTANCE,
-            self.SPEED,
-        )
+    def __init__(self, name: str | None = None, **changes: int) -> None:
+        stats = {
+            "hp": self.HP,
+            "mp": self.MP,
+            "strength": self.STRENGTH,
+            "magic": self.MAGIC,
+            "defense": self.DEFENSE,
+            "resistance": self.RESISTANCE,
+            "speed": self.SPEED,
+        }
+        stats.update(changes)  # bonus ★★★ 5 : une variante, Wolf("Loup alpha", hp=600)
+        super().__init__(name or self.NAME, **stats)
         self.xp = self.XP
         self.gil = self.GIL
 
@@ -41,6 +42,11 @@ class Monster(Character):
     def title(self) -> str:
         """Un monstre n'a pas de job."""
         return "Monstre"
+
+    @property
+    def warning(self) -> str | None:
+        """Ce que le monstre laisse deviner de son prochain tour ; rien, par défaut."""
+        return None
 
     def act(self, heroes: Sequence[Character]) -> list[Hit]:
         """Le tour du monstre : il attaque un héros debout, au hasard.

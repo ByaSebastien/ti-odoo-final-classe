@@ -1,25 +1,26 @@
+"""Character : tout ce que les héros et les monstres partagent."""
+
 from abc import ABC, abstractmethod
 
 
 class Character(ABC):
+    """Un combattant de Final Classe : un héros ou un monstre."""
 
     DAMAGE_CAP = 9999
 
     def __init__(
-            self,
-            name,
-            hp,
-            mp,
-            strength,
-            magic,
-            defense,
-            resistance,
-            speed
-                 ):
-
-        if min(hp,strength, magic, defense, resistance, speed) < 1:
-            raise ValueError("Chaque statistique doit valoir au moins 1")
-
+        self,
+        name: str,
+        hp: int,
+        mp: int,
+        strength: int,
+        magic: int,
+        defense: int,
+        resistance: int,
+        speed: int,
+    ) -> None:
+        if min(hp, strength, magic, defense, resistance, speed) < 1:
+            raise ValueError("Chaque statistique vaut au moins 1")
         self.name = name
         self.strength = strength
         self.magic = magic
