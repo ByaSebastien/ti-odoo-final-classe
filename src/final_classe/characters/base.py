@@ -22,11 +22,11 @@ class Character(ABC):
         if min(hp, strength, magic, defense, resistance, speed) < 1:
             raise ValueError("Chaque statistique vaut au moins 1")
         self.name = name
-        self.strength = strength
-        self.magic = magic
-        self.defense = defense
-        self.resistance = resistance
-        self.speed = speed
+        self._strength = strength
+        self._magic = magic
+        self._defense = defense
+        self._resistance = resistance
+        self._speed = speed
         self.max_hp = hp
         self.max_mp = mp
         self._hp = hp
@@ -47,6 +47,31 @@ class Character(ABC):
     def mp(self) -> int:
         """Les PM actuels : en lecture seule."""
         return self._mp
+
+    @property
+    def strength(self) -> int:
+        """La Force (FOR) : en lecture seule."""
+        return self._strength
+
+    @property
+    def magic(self) -> int:
+        """La Magie (MAG) : en lecture seule."""
+        return self._magic
+
+    @property
+    def defense(self) -> int:
+        """La Défense (DÉF) : en lecture seule."""
+        return self._defense
+
+    @property
+    def resistance(self) -> int:
+        """La Résistance (RÉS) : en lecture seule."""
+        return self._resistance
+
+    @property
+    def speed(self) -> int:
+        """La Vitesse (VIT) : en lecture seule."""
+        return self._speed
 
     @property
     def is_alive(self) -> bool:
@@ -84,3 +109,7 @@ class Character(ABC):
         gained = min(amount, self.max_hp - self._hp)
         self._hp += gained
         return gained
+
+    def lower_defence(self) -> None:
+        """Divise la DÉF par deux, sans descendre sous 1 : c'est Brise-armure."""
+        self._defense = max(1, self._defense // 2)

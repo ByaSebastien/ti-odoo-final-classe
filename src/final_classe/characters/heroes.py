@@ -4,6 +4,7 @@ from abc import abstractmethod
 from typing import override
 
 from final_classe.characters.base import Character
+from final_classe.items import Equipment
 
 
 class Hero(Character):
@@ -27,6 +28,8 @@ class Hero(Character):
         self.level = 1
         self.xp = 0
         self.guarding = False  # en garde : les coups reçus sont divisés par deux
+        self.weapon: Equipment | None = None
+        self.armor: Equipment | None = None
 
     @property
     def name(self) -> str:
@@ -46,6 +49,36 @@ class Hero(Character):
         return self.JOB_NAME
 
     @property
+    @override
+    def strength(self) -> int:
+        """La FOR : la base, plus l'équipement."""
+        return super().strength + sum(item.strength for item in self.equipment)
+
+    @property
+    @override
+    def magic(self) -> int:
+        """La MAG : la base, plus l'équipement."""
+        return super().magic + sum(item.magic for item in self.equipment)
+
+    @property
+    @override
+    def defense(self) -> int:
+        """La DÉF : la base, plus l'équipement."""
+        return super().defense + sum(item.defense for item in self.equipment)
+
+    @property
+    @override
+    def resistance(self) -> int:
+        """La RÉS : la base, plus l'équipement."""
+        return super().resistance + sum(item.resistance for item in self.equipment)
+
+    @property
+    @override
+    def speed(self) -> int:
+        """La VIT : la base, plus l'équipement."""
+        return super().speed + sum(item.speed for item in self.equipment)
+
+    @property
     def can_use_skill(self) -> bool:
         """Vrai s'il reste assez de PM pour la compétence."""
         return self._mp >= self.SKILL_COST
@@ -54,6 +87,23 @@ class Hero(Character):
     def xp_to_next(self) -> int:
         """L'XP qu'il faut pour passer au niveau suivant."""
         return self.level * 100
+
+    @property
+    def equipment(self):
+        """Les pièces portées."""
+        return [item for item in (self.weapon, self.armor) if item is not None]
+
+    def equip(self, item: Equipment):
+        """Range la pièce à son emplacement ; renvoie celle qu'elle remplace, ou None."""
+        if item.slot == "arme":
+            previous = self.weapon
+            self.weapon = item
+        else:
+            previous = self.armor
+            self.armor = item
+
+        return previous
+
 
     def use_skill(self, *targets: Character) -> int:
         """La méthode modèle : paie les PM une fois, puis applique l'effet à chaque cible."""
@@ -102,10 +152,10 @@ class Hero(Character):
             self.level += 1
             self.max_hp += 100
             self.max_mp += 10
-            self.strength += 3
-            self.magic += 3
-            self.defense += 3
-            self.resistance += 3
+            self._strength += 3
+            self._magic += 3
+            self._defense += 3
+            self._resistance += 3
             levels += 1
         if levels:  # un nouveau niveau remet les PV et les PM au maximum
             self.rest()
